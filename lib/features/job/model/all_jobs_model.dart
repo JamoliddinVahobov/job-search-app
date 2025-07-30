@@ -1,5 +1,21 @@
 import 'package:job_search_app/core/utils/all_utils.dart';
 
+class AllJobsModel {
+  final int count;
+  final int mean;
+  final List<JobModel> jobs;
+
+  AllJobsModel({required this.count, required this.mean, required this.jobs});
+
+  factory AllJobsModel.fromJson(MapData json) {
+    return AllJobsModel(
+      count: json['count'],
+      mean: json['mean'],
+      jobs: List.of((json['results'] as List).map((e) => JobModel.fromJson(e))),
+    );
+  }
+}
+
 class JobModel {
   final String id;
   final String title;
@@ -33,7 +49,7 @@ class JobModel {
     required this.location,
   });
 
-  factory JobModel.fromMap(MapData json) {
+  factory JobModel.fromJson(MapData json) {
     return JobModel(
       id: json['id'],
       title: json['title'],
@@ -46,9 +62,9 @@ class JobModel {
       salaryIsPredicted: json['salary_is_predicted'],
       salaryMin: json['salary_min'],
       salaryMax: json['salary_max'],
-      company: Company.fromMap(json['company']),
-      category: Category.fromMap(json['category']),
-      location: Location.fromMap(json['location']),
+      company: Company.fromJson(json['company']),
+      category: Category.fromJson(json['category']),
+      location: Location.fromJson(json['location']),
     );
   }
 }
@@ -58,7 +74,7 @@ class Company {
 
   Company({required this.displayName});
 
-  factory Company.fromMap(MapData json) {
+  factory Company.fromJson(MapData json) {
     return Company(displayName: json['display_name']);
   }
 }
@@ -69,7 +85,7 @@ class Category {
 
   Category({required this.tag, required this.label});
 
-  factory Category.fromMap(MapData json) {
+  factory Category.fromJson(MapData json) {
     return Category(tag: json['tag'], label: json['label']);
   }
 }
@@ -80,7 +96,7 @@ class Location {
 
   Location({required this.displayName, required this.area});
 
-  factory Location.fromMap(MapData json) {
+  factory Location.fromJson(MapData json) {
     return Location(
       displayName: json['display_name'],
       area: List<String>.from(json['area']),

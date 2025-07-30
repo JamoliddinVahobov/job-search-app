@@ -1,0 +1,26 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart' show debugPrint;
+import 'package:job_search_app/features/job/data/get_jobs_params.dart';
+import 'package:job_search_app/features/job/model/all_jobs_model.dart';
+
+class JobDataSource {
+  final Dio dio;
+
+  const JobDataSource(this.dio);
+
+  Future<AllJobsModel> getJobs(GetJobsParams params) async {
+    try {
+      final response = await dio.get(
+        'jobs',
+        queryParameters: params.toQueryParams(),
+      );
+      return AllJobsModel.fromJson(response.data);
+    } on DioException catch (e, s) {
+      debugPrint('error data: ${e.response?.data} \n stacktrace: $s');
+      throw Exception(e.response?.data);
+    } catch (e, s) {
+      debugPrint('non-dio error: $e \n stacktrace: $s');
+      throw Exception(e);
+    }
+  }
+}
