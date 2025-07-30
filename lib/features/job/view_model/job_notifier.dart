@@ -8,7 +8,7 @@ import 'package:job_search_app/features/job/model/all_jobs_model.dart';
 
 part 'job_state.dart';
 
-class JobViewModel extends Notifier<JobState> {
+class JobNotifier extends Notifier<JobState> {
   late final JobRepository _repository;
 
   @override

@@ -1,3 +1,6 @@
+# Api keys
+lib/core/constants/api_keys.dart
+
 # Miscellaneous
 *.class
 *.log
