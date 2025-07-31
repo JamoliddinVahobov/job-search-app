@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:job_search_app/core/extensions/extensions.dart';
+import 'package:job_search_app/core/utils/ui_helpers.dart';
 import 'package:job_search_app/core/widgets/custom_empty_widget.dart';
 import 'package:job_search_app/core/widgets/custom_error_widget.dart';
 import 'package:job_search_app/features/job/view_model/job_notifier_provider.dart';
@@ -24,12 +25,11 @@ class _JobsPageState extends ConsumerState<JobsPage> {
   @override
   Widget build(BuildContext context) {
     ref.listen(jobNotifierProvider, (previous, next) {
-      if (next.errorMessage != null && next.errorMessage!.isNotEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.errorMessage!)));
+      if (next.status.isError && next.errorMessage != null) {
+        showErrorSnackBar(context, next.errorMessage!);
       }
     });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Find Jobs'),

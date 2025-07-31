@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:equatable/equatable.dart';
 import 'package:job_search_app/core/enums/page_status_enum.dart';
@@ -17,7 +18,11 @@ class JobNotifier extends Notifier<JobState> {
     return JobState();
   }
 
-  Future<void> getJobs({int page = 1, String searchTerm = ''}) async {
+  Future<void> getJobs({
+    BuildContext? context,
+    int page = 1,
+    String searchTerm = '',
+  }) async {
     state = state.copyWith(status: PageStatus.loading);
 
     final params = GetJobsParams(page: page, searchTerm: searchTerm);
