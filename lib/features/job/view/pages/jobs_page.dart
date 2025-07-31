@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:job_search_app/core/extensions/extensions.dart';
+import 'package:job_search_app/core/utils/all_utils.dart';
 import 'package:job_search_app/core/utils/ui_helpers.dart';
 import 'package:job_search_app/core/widgets/custom_empty_widget.dart';
 import 'package:job_search_app/core/widgets/custom_error_widget.dart';
+import 'package:job_search_app/features/job/view/widgets/job_card.dart';
 import 'package:job_search_app/features/job/view_model/job_notifier_provider.dart';
 
 class JobsPage extends ConsumerStatefulWidget {
@@ -14,12 +16,39 @@ class JobsPage extends ConsumerStatefulWidget {
 }
 
 class _JobsPageState extends ConsumerState<JobsPage> {
+  late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
       ref.read(jobNotifierProvider.notifier).getJobs();
     });
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+
+    if (_scrollController.offset ==
+        _scrollController.position.maxScrollExtent) {
+      final state = ref.read(jobNotifierProvider);
+
+      final hasMore = state.jobs.length < state.count!;
+      final isLoading = state.isPaginationLoading;
+
+      if (hasMore && !isLoading) {
+        final newPage = state.lastFetchedPage + 1;
+        ref.read(jobNotifierProvider.notifier).getJobs(page: newPage);
+      }
+    }
   }
 
   @override
@@ -52,15 +81,25 @@ class _JobsPageState extends ConsumerState<JobsPage> {
               return RefreshIndicator.adaptive(
                 onRefresh: () async =>
                     ref.read(jobNotifierProvider.notifier).getJobs(),
-                child: ListView.builder(
-                  itemCount: state.jobs.length,
+                child: ListView.separated(
+                  controller: _scrollController,
+                  padding: paddingHor12Ver6,
+                  itemCount:
+                      state.jobs.length + (state.isPaginationLoading ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final job = state.jobs[index];
-                    return ListTile(
-                      title: Text(job.title),
-                      subtitle: Text(job.company.companyName),
-                    );
+                    if (index < state.jobs.length) {
+                      final job = state.jobs[index];
+                      return JobCard(job: job);
+                    } else {
+                      return const Padding(
+                        padding: paddingVer16,
+                        child: Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
                   },
+                  separatorBuilder: (context, index) => h6,
                 ),
               );
             }
