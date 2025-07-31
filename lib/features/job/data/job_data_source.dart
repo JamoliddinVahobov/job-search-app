@@ -11,9 +11,10 @@ class JobDataSource {
   Future<AllJobsModel> getJobs(GetJobsParams params) async {
     try {
       final response = await dio.get(
-        'jobs',
+        'jobs/gb/search/${params.page}',
         queryParameters: params.toQueryParams(),
       );
+
       return AllJobsModel.fromJson(response.data);
     } on DioException catch (e, s) {
       debugPrint('error data: ${e.response?.data} \n stacktrace: $s');

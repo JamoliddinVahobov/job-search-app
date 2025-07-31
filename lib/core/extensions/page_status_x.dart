@@ -1,4 +1,4 @@
-import 'package:job_search_app/core/enums/page_status_enum.dart';
+part of 'extensions.dart';
 
 extension PageStatusX on PageStatus {
   bool get isLoading => this == PageStatus.loading;

@@ -2,7 +2,7 @@ import 'package:job_search_app/core/utils/all_utils.dart';
 
 class AllJobsModel {
   final int count;
-  final int mean;
+  final num mean;
   final List<JobModel> jobs;
 
   AllJobsModel({required this.count, required this.mean, required this.jobs});
@@ -20,14 +20,14 @@ class JobModel {
   final String id;
   final String title;
   final String description;
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
   final String redirectUrl;
   final String adref;
   final String created;
   final String salaryIsPredicted;
-  final double salaryMin;
-  final double salaryMax;
+  final num? salaryMin;
+  final num? salaryMax;
   final Company company;
   final Category category;
   final Location location;
@@ -36,8 +36,8 @@ class JobModel {
     required this.id,
     required this.title,
     required this.description,
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
     required this.redirectUrl,
     required this.adref,
     required this.created,
@@ -70,12 +70,12 @@ class JobModel {
 }
 
 class Company {
-  final String displayName;
+  final String companyName;
 
-  Company({required this.displayName});
+  Company({required this.companyName});
 
   factory Company.fromJson(MapData json) {
-    return Company(displayName: json['display_name']);
+    return Company(companyName: json['display_name']);
   }
 }
 

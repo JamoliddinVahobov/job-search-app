@@ -17,10 +17,10 @@ class JobNotifier extends Notifier<JobState> {
     return JobState();
   }
 
-  Future<void> getJobs({String searchTerm = ''}) async {
+  Future<void> getJobs({int page = 1, String searchTerm = ''}) async {
     state = state.copyWith(status: PageStatus.loading);
 
-    final params = GetJobsParams(searchTerm: searchTerm);
+    final params = GetJobsParams(page: page, searchTerm: searchTerm);
 
     final result = await _repository.getJobs(params);
 

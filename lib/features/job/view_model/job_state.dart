@@ -4,7 +4,7 @@ class JobState extends Equatable {
   final PageStatus status;
   final String? errorMessage;
   final int? count;
-  final int? mean;
+  final num? mean;
   final List<JobModel> jobs;
 
   const JobState({
@@ -19,7 +19,7 @@ class JobState extends Equatable {
     PageStatus? status,
     String? errorMessage,
     int? count,
-    int? mean,
+    num? mean,
     List<JobModel>? jobs,
   }) {
     return JobState(
