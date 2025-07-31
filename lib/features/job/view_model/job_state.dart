@@ -2,6 +2,8 @@ part of 'job_notifier.dart';
 
 class JobState extends Equatable {
   final PageStatus status;
+  final bool isPaginationLoading;
+  final int lastFetchedPage;
   final String? errorMessage;
   final int? count;
   final num? mean;
@@ -9,6 +11,8 @@ class JobState extends Equatable {
 
   const JobState({
     this.status = PageStatus.loading,
+    this.isPaginationLoading = false,
+    this.lastFetchedPage = 1,
     this.errorMessage,
     this.count,
     this.mean,
@@ -17,6 +21,8 @@ class JobState extends Equatable {
 
   JobState copyWith({
     PageStatus? status,
+    bool? isPaginationLoading,
+    int? lastFetchedPage,
     String? errorMessage,
     int? count,
     num? mean,
@@ -24,6 +30,8 @@ class JobState extends Equatable {
   }) {
     return JobState(
       status: status ?? this.status,
+      isPaginationLoading: isPaginationLoading ?? this.isPaginationLoading,
+      lastFetchedPage: lastFetchedPage ?? this.lastFetchedPage,
       errorMessage: errorMessage ?? this.errorMessage,
       count: count ?? this.count,
       mean: mean ?? this.mean,
@@ -32,5 +40,13 @@ class JobState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, errorMessage, count, mean, jobs];
+  List<Object?> get props => [
+    status,
+    isPaginationLoading,
+    lastFetchedPage,
+    errorMessage,
+    count,
+    mean,
+    jobs,
+  ];
 }

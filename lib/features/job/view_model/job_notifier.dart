@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:equatable/equatable.dart';
 import 'package:job_search_app/core/enums/page_status_enum.dart';
@@ -18,12 +17,14 @@ class JobNotifier extends Notifier<JobState> {
     return JobState();
   }
 
-  Future<void> getJobs({
-    BuildContext? context,
-    int page = 1,
-    String searchTerm = '',
-  }) async {
-    state = state.copyWith(status: PageStatus.loading);
+  Future<void> getJobs({int page = 1, String searchTerm = ''}) async {
+    final bool isInitial = page == 1;
+
+    if (isInitial) {
+      state = state.copyWith(status: PageStatus.loading);
+    } else {
+      state = state.copyWith(isPaginationLoading: true);
+    }
 
     final params = GetJobsParams(page: page, searchTerm: searchTerm);
 
@@ -31,17 +32,31 @@ class JobNotifier extends Notifier<JobState> {
 
     result.fold(
       (failure) {
-        state = state.copyWith(
-          errorMessage: failure.message,
-          status: PageStatus.error,
-        );
+        if (isInitial) {
+          state = state.copyWith(
+            errorMessage: failure.message,
+            status: PageStatus.error,
+            isPaginationLoading: false,
+          );
+        } else {
+          state = state.copyWith(
+            errorMessage: failure.message,
+            isPaginationLoading: false,
+          );
+        }
       },
-      (data) {
+      (success) {
+        List<JobModel> newList = isInitial
+            ? success.jobs
+            : [...state.jobs, ...success.jobs];
+
         state = state.copyWith(
-          count: data.count,
-          mean: data.mean,
-          jobs: data.jobs,
+          lastFetchedPage: page,
+          count: success.count,
+          mean: success.mean,
+          jobs: newList,
           status: PageStatus.success,
+          isPaginationLoading: false,
         );
       },
     );
