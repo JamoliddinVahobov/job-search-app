@@ -1,0 +1,113 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:job_search_app/core/extensions/extensions.dart';
+import 'package:job_search_app/core/utils/all_utils.dart';
+import 'package:job_search_app/core/utils/ui_helpers.dart';
+import 'package:job_search_app/core/widgets/custom_empty_widget.dart';
+import 'package:job_search_app/core/widgets/custom_error_widget.dart';
+import 'package:job_search_app/features/job/view/widgets/job_card.dart';
+import 'package:job_search_app/features/job/view_model/job_notifier_provider.dart';
+
+class JobsPage extends ConsumerStatefulWidget {
+  const JobsPage({super.key});
+
+  @override
+  ConsumerState<JobsPage> createState() => _JobsPageState();
+}
+
+class _JobsPageState extends ConsumerState<JobsPage> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(jobNotifierProvider.notifier).getJobs();
+    });
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+
+    if (_scrollController.offset ==
+        _scrollController.position.maxScrollExtent) {
+      final state = ref.read(jobNotifierProvider);
+
+      final hasMore = state.jobs.length < state.count!;
+      final isLoading = state.isPaginationLoading;
+
+      if (hasMore && !isLoading) {
+        final newPage = state.lastFetchedPage + 1;
+        ref.read(jobNotifierProvider.notifier).getJobs(page: newPage);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(jobNotifierProvider, (previous, next) {
+      if (next.status.isError && next.errorMessage != null) {
+        showErrorSnackBar(context, next.errorMessage!);
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Find Jobs'),
+        centerTitle: true,
+        forceMaterialTransparency: true,
+      ),
+      body: Builder(
+        builder: (_) {
+          final state = ref.watch(jobNotifierProvider);
+          if (state.status.isLoading) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          } else if (state.status.isError) {
+            return CustomErrorWidget(
+              onTap: () => ref.read(jobNotifierProvider.notifier).getJobs(),
+            );
+          } else if (state.status.isSuccess) {
+            if (state.jobs.isEmpty) {
+              return CustomEmptyWidget();
+            } else {
+              return RefreshIndicator.adaptive(
+                onRefresh: () async =>
+                    ref.read(jobNotifierProvider.notifier).getJobs(),
+                child: ListView.separated(
+                  controller: _scrollController,
+                  padding: paddingHor12Ver6,
+                  itemCount:
+                      state.jobs.length + (state.isPaginationLoading ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index < state.jobs.length) {
+                      final job = state.jobs[index];
+                      return JobCard(job: job);
+                    } else {
+                      return const Padding(
+                        padding: paddingVer16,
+                        child: Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
+                  },
+                  separatorBuilder: (context, index) => h6,
+                ),
+              );
+            }
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
+    );
+  }
+}
