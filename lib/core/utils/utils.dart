@@ -8,11 +8,13 @@ const w12 = SizedBox(width: 12);
 
 // Border radius
 final borderRadius8 = BorderRadius.circular(8);
-final borderRadius12 = BorderRadius.circular(12);
+final borderRadius10 = BorderRadius.circular(10);
 
 // Padding
 const paddingHor20 = EdgeInsets.symmetric(horizontal: 20);
 
-const paddingVer16 = EdgeInsets.symmetric(vertical: 16);
+const paddingVer14 = EdgeInsets.symmetric(vertical: 14);
 
 const paddingHor12Ver6 = EdgeInsets.symmetric(horizontal: 12, vertical: 6);
+
+const searchFieldPadding = EdgeInsets.fromLTRB(12, 0, 12, 10);

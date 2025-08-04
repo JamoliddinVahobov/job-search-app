@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_search_app/core/utils/all_utils.dart';
-import 'package:job_search_app/features/job/model/all_jobs_model.dart';
+import 'package:job_search_app/features/job/model/paginated_jobs_model.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class JobCard extends StatelessWidget {
   final JobModel job;
@@ -10,14 +11,16 @@ class JobCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: borderRadius12),
-
+      shape: RoundedRectangleBorder(borderRadius: borderRadius10),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(job.title, style: Theme.of(context).textTheme.titleMedium),
+            SelectableText(
+              job.title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 4),
             Text(
               '${job.company.companyName} • ${job.location.displayName}',
@@ -41,17 +44,24 @@ class JobCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            // const SizedBox(height: 8),
-            // Apply / View button
-            // Align(
-            //   alignment: Alignment.centerRight,
-            //   child: TextButton(
-            //     onPressed: () {
-            //       launchUrl(Uri.parse(job.redirectUrl));
-            //     },
-            //     child: const Text('View Job'),
-            //   ),
-            // ),
+            const SizedBox(height: 8),
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  try {
+                    launchUrlString(
+                      job.redirectUrl,
+                      mode: LaunchMode.externalApplication,
+                    );
+                  } catch (e, s) {
+                    debugPrint('$e, $s');
+                  }
+                },
+                child: const Text('Apply on Adnuza'),
+              ),
+            ),
           ],
         ),
       ),

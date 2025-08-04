@@ -1,14 +1,18 @@
 import 'package:job_search_app/core/utils/all_utils.dart';
 
-class AllJobsModel {
+class PaginatedJobsModel {
   final int count;
   final num mean;
   final List<JobModel> jobs;
 
-  AllJobsModel({required this.count, required this.mean, required this.jobs});
+  PaginatedJobsModel({
+    required this.count,
+    required this.mean,
+    required this.jobs,
+  });
 
-  factory AllJobsModel.fromJson(MapData json) {
-    return AllJobsModel(
+  factory PaginatedJobsModel.fromJson(MapData json) {
+    return PaginatedJobsModel(
       count: json['count'],
       mean: json['mean'],
       jobs: List.of((json['results'] as List).map((e) => JobModel.fromJson(e))),

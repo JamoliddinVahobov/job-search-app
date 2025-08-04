@@ -5,6 +5,7 @@ import 'package:job_search_app/core/utils/all_utils.dart';
 import 'package:job_search_app/core/utils/ui_helpers.dart';
 import 'package:job_search_app/core/widgets/custom_empty_widget.dart';
 import 'package:job_search_app/core/widgets/custom_error_widget.dart';
+import 'package:job_search_app/core/widgets/fields/main_search_field.dart';
 import 'package:job_search_app/features/job/view/widgets/job_card.dart';
 import 'package:job_search_app/features/job/view_model/job_notifier_provider.dart';
 
@@ -16,6 +17,7 @@ class JobsPage extends ConsumerStatefulWidget {
 }
 
 class _JobsPageState extends ConsumerState<JobsPage> {
+  final TextEditingController _searchController = TextEditingController();
   late final ScrollController _scrollController;
 
   @override
@@ -61,9 +63,19 @@ class _JobsPageState extends ConsumerState<JobsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Find Jobs'),
+        title: const Text('Browse Jobs'),
         centerTitle: true,
         forceMaterialTransparency: true,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(46),
+          child: Padding(
+            padding: searchFieldPadding,
+            child: MainSearchField(
+              hintText: 'Search jobs',
+              controller: _searchController,
+            ),
+          ),
+        ),
       ),
       body: Builder(
         builder: (_) {
@@ -84,6 +96,8 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                 child: ListView.separated(
                   controller: _scrollController,
                   padding: paddingHor12Ver6,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount:
                       state.jobs.length + (state.isPaginationLoading ? 1 : 0),
                   itemBuilder: (context, index) {
@@ -92,7 +106,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                       return JobCard(job: job);
                     } else {
                       return const Padding(
-                        padding: paddingVer16,
+                        padding: paddingVer14,
                         child: Center(
                           child: CircularProgressIndicator.adaptive(),
                         ),
@@ -107,6 +121,16 @@ class _JobsPageState extends ConsumerState<JobsPage> {
             return const SizedBox.shrink();
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _scrollController.animateTo(
+            0,
+            duration: Duration(milliseconds: 50),
+            curve: Curves.ease,
+          );
+        },
+        child: Icon(Icons.arrow_upward),
       ),
     );
   }
