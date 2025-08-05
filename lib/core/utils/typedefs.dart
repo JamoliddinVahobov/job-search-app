@@ -1,4 +1,4 @@
-part of 'all_utils.dart';
+part of 'utils.dart';
 
 typedef MapData = Map<String, dynamic>;
 

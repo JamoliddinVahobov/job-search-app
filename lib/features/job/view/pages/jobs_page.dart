@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:job_search_app/core/extensions/extensions.dart';
-import 'package:job_search_app/core/utils/all_utils.dart';
-import 'package:job_search_app/core/utils/ui_helpers.dart';
+import 'package:job_search_app/core/utils/utils.dart';
 import 'package:job_search_app/core/widgets/custom_empty_widget.dart';
 import 'package:job_search_app/core/widgets/custom_error_widget.dart';
 import 'package:job_search_app/core/widgets/fields/main_search_field.dart';
@@ -24,7 +23,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      ref.read(jobNotifierProvider.notifier).getJobs();
+      _getJobs();
     });
     _scrollController = ScrollController()..addListener(_onScroll);
   }
@@ -33,6 +32,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    Debouncer.dispose();
     super.dispose();
   }
 
@@ -41,22 +41,32 @@ class _JobsPageState extends ConsumerState<JobsPage> {
 
     if (_scrollController.offset ==
         _scrollController.position.maxScrollExtent) {
-      final state = ref.read(jobNotifierProvider);
+      final state = ref.read(jobProvider);
 
       final hasMore = state.jobs.length < state.count!;
       final isLoading = state.isPaginationLoading;
 
       if (hasMore && !isLoading) {
         final newPage = state.lastFetchedPage + 1;
-        ref.read(jobNotifierProvider.notifier).getJobs(page: newPage);
+        _getJobs(page: newPage);
       }
     }
   }
 
+  void _getJobs({int page = 1, String? searchTerm}) {
+    ref
+        .read(jobProvider.notifier)
+        .getJobs(
+          page: page,
+          searchTerm: searchTerm?.trim() ?? _searchController.text.trim(),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
-    ref.listen(jobNotifierProvider, (previous, next) {
-      if (next.status.isError && next.errorMessage != null) {
+    ref.listen(jobProvider, (previous, next) {
+      if (next.errorMessage != null &&
+          next.errorMessage != previous?.errorMessage) {
         showErrorSnackBar(context, next.errorMessage!);
       }
     });
@@ -73,29 +83,29 @@ class _JobsPageState extends ConsumerState<JobsPage> {
             child: MainSearchField(
               hintText: 'Search jobs',
               controller: _searchController,
+              onChanged: (String value) {
+                Debouncer.debounce(() => _getJobs(searchTerm: value));
+              },
             ),
           ),
         ),
       ),
       body: Builder(
         builder: (_) {
-          final state = ref.watch(jobNotifierProvider);
+          final state = ref.watch(jobProvider);
           if (state.status.isLoading) {
             return const Center(child: CircularProgressIndicator.adaptive());
           } else if (state.status.isError) {
-            return CustomErrorWidget(
-              onTap: () => ref.read(jobNotifierProvider.notifier).getJobs(),
-            );
+            return CustomErrorWidget(onTap: () => _getJobs());
           } else if (state.status.isSuccess) {
             if (state.jobs.isEmpty) {
               return CustomEmptyWidget();
             } else {
               return RefreshIndicator.adaptive(
-                onRefresh: () async =>
-                    ref.read(jobNotifierProvider.notifier).getJobs(),
+                onRefresh: () async => _getJobs(),
                 child: ListView.separated(
                   controller: _scrollController,
-                  padding: paddingHor12Ver6,
+                  padding: paddingHor12Ver4,
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount:
@@ -122,16 +132,17 @@ class _JobsPageState extends ConsumerState<JobsPage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _scrollController.animateTo(
-            0,
-            duration: Duration(milliseconds: 50),
-            curve: Curves.ease,
-          );
-        },
-        child: Icon(Icons.arrow_upward),
-      ),
+      floatingActionButton:
+          ref.watch(jobProvider).status.isSuccess &&
+              _scrollController.hasClients &&
+              _scrollController.offset > 0
+          ? FloatingActionButton(
+              onPressed: () {
+                _scrollController.jumpTo(0);
+              },
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
     );
   }
 }

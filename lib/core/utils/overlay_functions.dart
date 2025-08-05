@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:job_search_app/core/extensions/build_context_x.dart';
+part of 'utils.dart';
 
 void showErrorSnackBar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_search_app/core/extensions/build_context_x.dart';
-import 'package:job_search_app/core/utils/all_utils.dart';
+import 'package:job_search_app/core/utils/utils.dart';
 
 class MainSearchField extends StatefulWidget {
   final String? hintText;

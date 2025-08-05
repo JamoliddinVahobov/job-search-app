@@ -1,15 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:job_search_app/core/error/failure.dart';
-import 'package:job_search_app/core/utils/all_utils.dart';
-import 'package:job_search_app/features/job/data/get_jobs_params.dart';
-import 'package:job_search_app/features/job/data/job_data_source.dart';
+import 'package:job_search_app/core/utils/utils.dart';
+import 'package:job_search_app/features/job/data/params/get_jobs_params.dart';
+import 'package:job_search_app/features/job/data/data_source/job_data_source.dart';
+import 'package:job_search_app/features/job/data/repository/job_repository.dart';
 import 'package:job_search_app/features/job/model/paginated_jobs_model.dart';
 
-class JobRepository {
+class JobRepositoryImpl implements JobRepository {
   final JobDataSource _dataSource;
 
-  JobRepository(this._dataSource);
+  JobRepositoryImpl(this._dataSource);
 
+  @override
   FutureResult<PaginatedJobsModel> getJobs(GetJobsParams params) async {
     try {
       final model = await _dataSource.getJobs(params);

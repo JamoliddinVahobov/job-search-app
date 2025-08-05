@@ -1,20 +1,14 @@
-part of 'all_utils.dart';
+import 'dart:async';
 
-// Space
-const h6 = SizedBox(height: 6);
-const h16 = SizedBox(height: 16);
+import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
+import 'package:job_search_app/core/error/failure.dart';
+import 'package:job_search_app/core/extensions/build_context_x.dart';
 
-const w12 = SizedBox(width: 12);
+part 'typedefs.dart';
 
-// Border radius
-final borderRadius8 = BorderRadius.circular(8);
-final borderRadius10 = BorderRadius.circular(10);
+part 'layout_utils.dart';
 
-// Padding
-const paddingHor20 = EdgeInsets.symmetric(horizontal: 20);
+part 'overlay_functions.dart';
 
-const paddingVer14 = EdgeInsets.symmetric(vertical: 14);
-
-const paddingHor12Ver6 = EdgeInsets.symmetric(horizontal: 12, vertical: 6);
-
-const searchFieldPadding = EdgeInsets.fromLTRB(12, 0, 12, 10);
+part 'debouncer.dart';

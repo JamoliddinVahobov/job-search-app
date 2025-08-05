@@ -1,5 +1,5 @@
 import 'package:job_search_app/core/constants/pagination_limits.dart';
-import 'package:job_search_app/core/utils/all_utils.dart';
+import 'package:job_search_app/core/utils/utils.dart';
 
 class GetJobsParams {
   final int page;

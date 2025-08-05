@@ -1,15 +1,11 @@
-import 'package:job_search_app/core/utils/all_utils.dart';
+import 'package:job_search_app/core/utils/utils.dart';
 
 class PaginatedJobsModel {
   final int count;
-  final num mean;
+  final num? mean;
   final List<JobModel> jobs;
 
-  PaginatedJobsModel({
-    required this.count,
-    required this.mean,
-    required this.jobs,
-  });
+  PaginatedJobsModel({required this.count, this.mean, required this.jobs});
 
   factory PaginatedJobsModel.fromJson(MapData json) {
     return PaginatedJobsModel(
@@ -23,18 +19,18 @@ class PaginatedJobsModel {
 class JobModel {
   final String id;
   final String title;
-  final String description;
+  final String? description;
   final double? latitude;
   final double? longitude;
   final String redirectUrl;
-  final String adref;
+  final String? adref;
   final String created;
-  final String salaryIsPredicted;
+  final String? salaryIsPredicted;
   final num? salaryMin;
   final num? salaryMax;
-  final Company company;
-  final Category category;
-  final Location location;
+  final Company? company;
+  final Category? category;
+  final Location? location;
 
   JobModel({
     required this.id,
@@ -48,7 +44,7 @@ class JobModel {
     required this.salaryIsPredicted,
     required this.salaryMin,
     required this.salaryMax,
-    required this.company,
+    this.company,
     required this.category,
     required this.location,
   });
@@ -84,10 +80,10 @@ class Company {
 }
 
 class Category {
-  final String tag;
+  final String? tag;
   final String label;
 
-  Category({required this.tag, required this.label});
+  Category({this.tag, required this.label});
 
   factory Category.fromJson(MapData json) {
     return Category(tag: json['tag'], label: json['label']);
@@ -96,14 +92,10 @@ class Category {
 
 class Location {
   final String displayName;
-  final List<String> area;
 
-  Location({required this.displayName, required this.area});
+  Location({required this.displayName});
 
   factory Location.fromJson(MapData json) {
-    return Location(
-      displayName: json['display_name'],
-      area: List<String>.from(json['area']),
-    );
+    return Location(displayName: json['display_name']);
   }
 }
