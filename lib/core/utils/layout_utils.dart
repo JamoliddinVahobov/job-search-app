@@ -17,6 +17,7 @@ final borderRadius16 = BorderRadius.circular(16);
 final borderRadius20 = BorderRadius.circular(20);
 
 // Padding
+const paddingHor12 = EdgeInsets.symmetric(horizontal: 12);
 const paddingHor20 = EdgeInsets.symmetric(horizontal: 20);
 
 const paddingVer14 = EdgeInsets.symmetric(vertical: 14);
@@ -25,5 +26,3 @@ const paddingHor10Ver4 = EdgeInsets.symmetric(horizontal: 10, vertical: 4);
 const paddingHor12Ver4 = EdgeInsets.symmetric(horizontal: 12, vertical: 4);
 const paddingHor16Ver12 = EdgeInsets.symmetric(horizontal: 16, vertical: 12);
 const paddingHor20Ver4 = EdgeInsets.symmetric(horizontal: 20, vertical: 4);
-
-const searchFieldPadding = EdgeInsets.fromLTRB(12, 0, 12, 10);

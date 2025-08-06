@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
+import 'package:job_search_app/core/error/get_error_message.dart';
 import 'package:job_search_app/features/job/data/params/get_jobs_params.dart';
 import 'package:job_search_app/features/job/data/data_source/job_data_source.dart';
 import 'package:job_search_app/features/job/model/paginated_jobs_model.dart';
@@ -20,10 +21,10 @@ class JobDataSourceImpl implements JobDataSource {
       return PaginatedJobsModel.fromJson(response.data);
     } on DioException catch (e, s) {
       debugPrint('error data: ${e.response?.data} \n stacktrace: $s');
-      throw Exception(e.response?.data);
+      throw getErrorMessage(e);
     } catch (e, s) {
       debugPrint('non-dio error: $e \n stacktrace: $s');
-      throw Exception(e);
+      throw getErrorMessage(e);
     }
   }
 }

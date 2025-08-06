@@ -6,12 +6,14 @@ class MainSearchField extends StatefulWidget {
   final String? hintText;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
+  final Function()? clearOnTap;
 
   const MainSearchField({
     super.key,
     this.hintText,
     this.controller,
     this.onChanged,
+    this.clearOnTap,
   });
 
   @override
@@ -19,34 +21,25 @@ class MainSearchField extends StatefulWidget {
 }
 
 class _MainSearchFieldState extends State<MainSearchField> {
-  late final TextEditingController _controller;
   bool _showClear = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController();
-    _showClear = _controller.text.isNotEmpty;
-
-    _controller.addListener(() {
-      final shouldShow = _controller.text.isNotEmpty;
-      if (shouldShow != _showClear && context.mounted) {
-        setState(() => _showClear = shouldShow);
+    widget.controller?.addListener(() {
+      if (widget.controller?.text.isNotEmpty ?? false) {
+        setState(() => _showClear = true);
+      } else {
+        setState(() => _showClear = false);
       }
-      widget.onChanged?.call(_controller.text);
     });
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) _controller.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: _controller,
+      controller: widget.controller,
+      onChanged: widget.onChanged,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: borderRadius10,
@@ -65,15 +58,13 @@ class _MainSearchFieldState extends State<MainSearchField> {
             ? IconButton(
                 icon: const Icon(Icons.clear),
                 onPressed: () {
-                  _controller.clear();
+                  widget.controller?.clear();
+                  widget.clearOnTap?.call();
                 },
               )
             : null,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
       ),
     );
   }

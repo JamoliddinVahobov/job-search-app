@@ -70,9 +70,9 @@ class JobModel {
 }
 
 class Company {
-  final String companyName;
+  final String? companyName;
 
-  Company({required this.companyName});
+  Company({this.companyName});
 
   factory Company.fromJson(MapData json) {
     return Company(companyName: json['display_name']);

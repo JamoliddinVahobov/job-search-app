@@ -92,39 +92,21 @@ class JobCard extends StatelessWidget {
               ],
             ),
             h6,
-
-            Row(
-              children: [
-                if (_formatSalary().isNotEmpty) ...[
-                  Container(
-                    padding: paddingHor10Ver4,
-                    decoration: BoxDecoration(
-                      borderRadius: borderRadius16,
-                      border: Border.all(
-                        color: context.color.primary.withValues(alpha: 0.4),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.attach_money,
-                          size: 17,
-                          color: context.color.primary,
-                        ),
-                        Text(
-                          _formatSalary(),
-                          style: context.textStyle.bodyMedium?.copyWith(
-                            color: context.color.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  w8,
-                ],
-              ],
+            Container(
+              padding: paddingHor12Ver4,
+              decoration: BoxDecoration(
+                borderRadius: borderRadius16,
+                border: Border.all(
+                  color: context.color.primary.withValues(alpha: 0.4),
+                ),
+              ),
+              child: Text(
+                "£ ${formatMoney(job.salaryMin)} - ${formatMoney(job.salaryMax)}",
+                style: context.textStyle.bodyMedium?.copyWith(
+                  color: context.color.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             h6,
 
@@ -180,26 +162,6 @@ class JobCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatSalary() {
-    if (job.salaryMin != null && job.salaryMax != null) {
-      final min = job.salaryMin!.toInt();
-      final max = job.salaryMax!.toInt();
-      final isPredicted = job.salaryIsPredicted == "true";
-
-      return '${_formatNumber(min)} - ${_formatNumber(max)}${isPredicted ? " (est.)" : ""}';
-    }
-    return '';
-  }
-
-  String _formatNumber(int number) {
-    if (number >= 1000000) {
-      return '${(number / 1000000).toStringAsFixed(1)}M';
-    } else if (number >= 1000) {
-      return '${(number / 1000).toStringAsFixed(0)}K';
-    }
-    return number.toString();
   }
 
   String _getTimeAgo(String created) {

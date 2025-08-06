@@ -13,3 +13,12 @@ void showErrorSnackBar(BuildContext context, String message) {
     ),
   );
 }
+
+String formatMoney(num? amount) {
+  final formatted = NumberFormat.currency(
+    locale: 'en_GB',
+    symbol: '',
+    decimalDigits: 2,
+  ).format(amount ?? 0);
+  return formatted;
+}
