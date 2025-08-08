@@ -7,7 +7,7 @@ import 'package:job_search_app/core/widgets/page_status_widgets/custom_error_wid
 import 'package:job_search_app/core/widgets/fields/main_search_field.dart';
 import 'package:job_search_app/features/job/view/widgets/job_card.dart';
 import 'package:job_search_app/features/job/view/widgets/jobs_summary_widget.dart';
-import 'package:job_search_app/features/job/view_model/job_notifier_provider.dart';
+import 'package:job_search_app/features/job/view_model/job_provider.dart';
 
 class JobsPage extends ConsumerStatefulWidget {
   const JobsPage({super.key});
@@ -17,9 +17,8 @@ class JobsPage extends ConsumerStatefulWidget {
 }
 
 class _JobsPageState extends ConsumerState<JobsPage> {
-  final TextEditingController _searchController = TextEditingController();
   late final ScrollController _scrollController;
-  bool _showScrollToTop = false;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -42,10 +41,8 @@ class _JobsPageState extends ConsumerState<JobsPage> {
     if (!_scrollController.hasClients) return;
 
     final shouldShow = _scrollController.offset > 200;
-    if (shouldShow != _showScrollToTop) {
-      setState(() {
-        _showScrollToTop = shouldShow;
-      });
+    if (shouldShow != ref.watch(jobProvider).showScrollToTop) {
+      ref.read(jobProvider.notifier).changeShowScrollToTop(shouldShow);
     }
 
     if (_scrollController.offset ==
@@ -73,6 +70,8 @@ class _JobsPageState extends ConsumerState<JobsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(jobProvider);
+
     ref.listen(jobProvider, (previous, next) {
       if (next.errorMessage != null &&
           next.errorMessage != previous?.errorMessage) {
@@ -104,7 +103,6 @@ class _JobsPageState extends ConsumerState<JobsPage> {
           Expanded(
             child: Builder(
               builder: (_) {
-                final state = ref.watch(jobProvider);
                 if (state.status.isLoading) {
                   return const Center(
                     child: CircularProgressIndicator.adaptive(),
@@ -164,8 +162,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
           ),
         ],
       ),
-      floatingActionButton:
-          ref.watch(jobProvider).status.isSuccess && _showScrollToTop
+      floatingActionButton: state.status.isSuccess && state.showScrollToTop
           ? FloatingActionButton(
               onPressed: () {
                 _scrollController.animateTo(

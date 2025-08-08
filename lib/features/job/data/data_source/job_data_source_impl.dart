@@ -6,14 +6,14 @@ import 'package:job_search_app/features/job/data/data_source/job_data_source.dar
 import 'package:job_search_app/features/job/model/paginated_jobs_model.dart';
 
 class JobDataSourceImpl implements JobDataSource {
-  final Dio dio;
+  final Dio _dio;
 
-  const JobDataSourceImpl(this.dio);
+  const JobDataSourceImpl(this._dio);
 
   @override
   Future<PaginatedJobsModel> getJobs(GetJobsParams params) async {
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         'jobs/gb/search/${params.page}',
         queryParameters: params.toQueryParams(),
       );

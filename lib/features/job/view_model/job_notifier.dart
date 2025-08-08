@@ -17,7 +17,7 @@ class JobNotifier extends Notifier<JobState> {
     return JobState();
   }
 
-  Future<void> getJobs({int page = 1, String searchTerm = ''}) async {
+  Future<void> getJobs({int page = 1, String? searchTerm}) async {
     final bool isInitial = page == 1;
 
     if (isInitial) {
@@ -26,7 +26,7 @@ class JobNotifier extends Notifier<JobState> {
       state = state.copyWith(isPaginationLoading: true);
     }
 
-    final params = GetJobsParams(page: page, searchTerm: searchTerm);
+    final params = GetJobsParams(page: page, searchTerm: searchTerm ?? '');
 
     final result = await _repository.getJobs(params);
 
@@ -60,5 +60,9 @@ class JobNotifier extends Notifier<JobState> {
         );
       },
     );
+  }
+
+  void changeShowScrollToTop(bool showScrollToTop) {
+    state = state.copyWith(showScrollToTop: showScrollToTop);
   }
 }
