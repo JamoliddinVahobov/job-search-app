@@ -94,9 +94,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                 onChanged: (String value) {
                   Debouncer.debounce(() => _getJobs(searchTerm: value));
                 },
-                clearOnTap: () {
-                  Debouncer.debounce(() => _getJobs(searchTerm: ''));
-                },
+                clearOnTap: () => _getJobs(searchTerm: ''),
               ),
             ),
           ),
