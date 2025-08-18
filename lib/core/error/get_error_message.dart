@@ -7,23 +7,23 @@ String getErrorMessage(dynamic exception) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.sendTimeout:
-        return ErrorMessages.connectionTimeout;
+        return ErrMsgs.connectionTimeout;
 
       case DioExceptionType.connectionError:
-        return ErrorMessages.connectionError;
+        return ErrMsgs.connectionError;
 
       case DioExceptionType.badResponse:
         final statusCode = exception.response?.statusCode;
         if (statusCode != null && statusCode >= 500) {
-          return ErrorMessages.serverError;
+          return ErrMsgs.serverError;
         } else {
-          return ErrorMessages.unexpectedError;
+          return ErrMsgs.unexpectedError;
         }
 
       default:
-        return ErrorMessages.unexpectedError;
+        return ErrMsgs.unexpectedError;
     }
   } else {
-    return ErrorMessages.unexpectedError;
+    return ErrMsgs.unexpectedError;
   }
 }

@@ -1,4 +1,4 @@
-class ErrorMessages {
+class ErrMsgs {
   static const String connectionTimeout =
       'Connection timeout. Please try again.';
   static const String connectionError =
