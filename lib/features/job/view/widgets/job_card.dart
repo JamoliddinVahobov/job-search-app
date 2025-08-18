@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:job_search_app/core/extensions/build_context_x.dart';
 import 'package:job_search_app/core/utils/utils.dart';
-import 'package:job_search_app/features/job/model/paginated_jobs_model.dart';
+import 'package:job_search_app/features/job/model/models/paginated_jobs_model.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class JobCard extends StatelessWidget {

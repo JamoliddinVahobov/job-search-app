@@ -1,19 +1,17 @@
+import 'package:job_search_app/features/job/model/params/get_jobs_params.dart';
+import 'package:job_search_app/features/job/model/models/paginated_jobs_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:job_search_app/core/error/get_error_message.dart';
-import 'package:job_search_app/features/job/data/params/get_jobs_params.dart';
-import 'package:job_search_app/features/job/data/data_source/job_data_source.dart';
-import 'package:job_search_app/features/job/model/paginated_jobs_model.dart';
 
-class JobDataSourceImpl implements JobDataSource {
-  final Dio _dio;
+class JobDataSource {
+  final Dio dio;
 
-  const JobDataSourceImpl(this._dio);
+  const JobDataSource(this.dio);
 
-  @override
   Future<PaginatedJobsModel> getJobs(GetJobsParams params) async {
     try {
-      final response = await _dio.get(
+      final response = await dio.get(
         'jobs/gb/search/${params.page}',
         queryParameters: params.toQueryParams(),
       );
