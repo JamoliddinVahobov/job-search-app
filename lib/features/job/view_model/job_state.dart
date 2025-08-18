@@ -8,6 +8,7 @@ class JobState extends Equatable {
   final int? count;
   final num? mean;
   final List<JobModel> jobs;
+  final bool showScrollToTop;
 
   const JobState({
     this.status = PageStatus.loading,
@@ -17,6 +18,7 @@ class JobState extends Equatable {
     this.count,
     this.mean,
     this.jobs = const [],
+    this.showScrollToTop = false,
   });
 
   JobState copyWith({
@@ -27,6 +29,7 @@ class JobState extends Equatable {
     int? count,
     num? mean,
     List<JobModel>? jobs,
+    bool? showScrollToTop,
   }) {
     return JobState(
       status: status ?? this.status,
@@ -36,6 +39,7 @@ class JobState extends Equatable {
       count: count ?? this.count,
       mean: mean ?? this.mean,
       jobs: jobs ?? this.jobs,
+      showScrollToTop: showScrollToTop ?? this.showScrollToTop,
     );
   }
 
@@ -48,5 +52,6 @@ class JobState extends Equatable {
     count,
     mean,
     jobs,
+    showScrollToTop,
   ];
 }
