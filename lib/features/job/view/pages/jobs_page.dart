@@ -7,7 +7,7 @@ import 'package:job_search_app/core/widgets/page_status_widgets/custom_error_wid
 import 'package:job_search_app/core/widgets/fields/main_search_field.dart';
 import 'package:job_search_app/features/job/view/widgets/job_card.dart';
 import 'package:job_search_app/features/job/view/widgets/jobs_summary_widget.dart';
-import 'package:job_search_app/features/job/view_model/job_notifier_provider.dart';
+import 'package:job_search_app/features/job/view_model/providers.dart';
 
 class JobsPage extends ConsumerStatefulWidget {
   const JobsPage({super.key});
