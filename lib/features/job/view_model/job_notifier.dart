@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:equatable/equatable.dart';
 import 'package:job_search_app/core/enums/page_status_enum.dart';
-import 'package:job_search_app/features/job/data/params/get_jobs_params.dart';
-import 'package:job_search_app/features/job/data/repository/job_repository.dart';
-import 'package:job_search_app/features/job/data/providers.dart';
-import 'package:job_search_app/features/job/model/paginated_jobs_model.dart';
+import 'package:job_search_app/features/job/model/params/get_jobs_params.dart';
+import 'package:job_search_app/features/job/model/repositories/job_repository.dart';
+import 'package:job_search_app/features/job/model/providers.dart';
+import 'package:job_search_app/features/job/model/models/paginated_jobs_model.dart';
 
 part 'job_state.dart';
 
